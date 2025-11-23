@@ -45,3 +45,6 @@ Thumbs.db
 /yaml-generation/vendor/
 # Generated YAML
 /src/assets/YAML/generated/generated.yaml
+/generated/activities.yaml
+/generated/dependency-tree.md
+url-test-results.txt

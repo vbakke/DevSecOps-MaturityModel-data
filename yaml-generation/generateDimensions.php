@@ -3,9 +3,11 @@
 require_once "functions.php";
 
 $errorMsg = array();
-$implementationReferenceFile = "src/assets/YAML/default/implementations.yaml";
+$targetFolder = "generated";
+$inputFolder = "src/assets/YAML";
+$implementationReferenceFile = "$inputFolder/default/implementations.yaml";
 
-$files = glob("src/assets/YAML/default/*/*.yaml");
+$files = glob("$inputFolder/default/*/*.yaml");
 $dimensions = array();
 foreach ($files as $filename) {
     echo "Reading $filename\n";
@@ -17,7 +19,7 @@ foreach ($files as $filename) {
     $dimensions = array_merge_recursive($dimensions, $dimension);
 }
 
-$files = glob("src/assets/YAML/custom/*/*.yaml");
+$files = glob("$inputFolder/custom/*/*.yaml");
 $dimensionsCustom = array();
 $dimensionsAggregated = array();
 foreach ($files as $filename) {
@@ -166,15 +168,17 @@ $dimensionsString = preg_replace(
     $dimensionsString
 );
 
-$targetGeneratedFile = getcwd() . "/src/assets/YAML/generated/generated.yaml";
+$targetGeneratedFile = getcwd() . "/$targetFolder/activities.yaml";
 echo "\nStoring to $targetGeneratedFile\n";
 file_put_contents($targetGeneratedFile, $dimensionsString);
 
 
 // Store dependency graph
-$graphFilename = getcwd() . "/src/assets/YAML/generated/dependency-tree.md";
+$graphIntro = "## DSOMM Activity Dependencies\n\nThe activities in this DSOMM Model have the following dependencies.";
+$graphFilename = getcwd() . "/$targetFolder/dependency-tree.md";
 $graphFile = fopen($graphFilename, "w");
-fwrite($graphFile, "```mermaid\n\n");
+fwrite($graphFile, $graphIntro."\n\n");
+fwrite($graphFile, "```mermaid\n");
 fwrite($graphFile, "graph LR\n\n");
 // List all nodes
 foreach ($activityIndex as $activityName => $key) {
